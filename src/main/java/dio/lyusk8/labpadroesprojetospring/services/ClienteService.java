@@ -26,13 +26,11 @@ public class ClienteService {
     }
 
     public Cliente save(Cliente cliente) {
-        var cep = cliente.getEndereco().getCep();
-        var endereco = enderecoRepository.findById(cep).orElseGet(() -> {
-            var novoEndereco = cepService.consultar(cep);
+        var endereco = enderecoRepository.findById(cliente.getEndereco().getCep()).isEmpty();
+        if(endereco){
+            var novoEndereco = cepService.consultar(cliente.getEndereco().getCep());
             enderecoRepository.save(novoEndereco);
-            return novoEndereco;
-        });
-        cliente.setEndereco(endereco);
+        }
         return repository.save(cliente);
     }
 
